@@ -60,9 +60,11 @@ else: # when we dont have the file
     input_df = user_input_features()
 
 # we input the cleaned CSV file..for the encoding phase
-penguins_cleaned = pd.read_csv('data/penguins_cleaned.csv', encoding="utf-8", header=0)
+# penguins_cleaned = pd.read_csv('data/penguins_cleaned.csv', encoding="utf-8", header=0)
+penguins = pd.read_pickle("data_cleaned.pkl")
+penguins = penguins.drop('species', axis=1)
 # I had to remove that extra index column that snuck in
-penguins = penguins_cleaned.drop(columns=['Unnamed: 0','species'], axis=1)
+# penguins = penguins_cleaned.drop(columns=['Unnamed: 0','species'], axis=1)
 df = pd.concat([input_df, penguins], axis=0)
 
 encode = ['sex', 'island']
@@ -95,4 +97,6 @@ st.subheader("Prediction")
 penguin_species = np.array(["Adelie", "Chinstrap", "Gentoo"])
 st.write(f"**{penguin_species[prediction][0]}**")
 st.subheader("Prediction Probability")
-st.dataframe(prediction_probs)
+prediction_probs_df = pd.DataFrame(prediction_probs)
+prediction_probs_df.columns = ["Adelie", "Chinstrap", "Gentoo"]
+st.dataframe(prediction_probs_df)
